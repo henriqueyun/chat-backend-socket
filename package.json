@@ -5,15 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "dev": "nodemon -r dotenv/config index.js dotenv_config_path=.env"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "pino": "^7.5.1",
     "socket.io": "^4.2.0"
   },
   "devDependencies": {
+    "dotenv": "^10.0.0",
+    "eslint": "^8.4.1",
     "nodemon": "^2.0.15"
   }
 }

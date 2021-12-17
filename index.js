@@ -1,32 +1,35 @@
-const httpServer = require("http").createServer();
-let port = 3000;
+const logger = require('pino')()
+logger.level = process.env.LOG_LEVEL
+const httpServer = require('http').createServer()
 
-const io = require("socket.io")(httpServer, {
+const io = require('socket.io')(httpServer, {
   cors: {
-    origin: "http://localhost:8080",
+    origin: 'http://localhost:8080',
   }
-});
+})
 
 io.on('connection', (socket) => {
+  logger.debug('new connection', socket.id)
   socket.on('message', (message) => {
-    console.log('Received from client (' + socket.id + '): ' + message, 'passing to room (xet)', message.xetId)
-    io  
-      .to(message.xetId)
+    logger.debug(`message from client : ${message}`)
+    io.to(message.xetId)
       .emit('broadcast', message)
-    io  
-      .to(message.xetId)
+    io.to(message.xetId)
       .emit('message', message)
   }).on('disconnect', () => {
-    console.log('disconnected', socket.id)
+    logger.debug(socket.id, 'disconnected')
   }).on('join', xetId => {
-    console.log('ROOMS', io.of('/').adapter.rooms)
+    logger.debug(xetId, 'joining')
+    logger.debug('rooms', io.of('/').adapter.rooms)
     socket.join(xetId)
   }).on('leave', xetId => {
-    console.log(socket.id + ' leaving ' + xetId, ' room')
+    logger.debug(socket.id, 'leaving', 'xetId', 'room')
     socket.leave(xetId)
   })
-});
+})
+
+const port = process.env.PORT || 3001
 
 httpServer.listen(port, function () {
-  console.log('listening / on ' + port)
-}); 
+  logger.info('web server socket serving at / on ' + port)
+})
