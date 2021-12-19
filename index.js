@@ -11,7 +11,7 @@ const io = require('socket.io')(httpServer, {
 io.on('connection', (socket) => {
   logger.debug('new connection', socket.id)
   socket.on('message', (message) => {
-    logger.debug(`message from client : ${message}`)
+    logger.debug(`message from client : ${JSON.stringify(message)}`)
     io.to(message.xetId)
       .emit('broadcast', message)
     io.to(message.xetId)
@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
     logger.debug(socket.id, 'disconnected')
   }).on('join', xetId => {
     logger.debug(xetId, 'joining')
-    logger.debug('rooms', io.of('/').adapter.rooms)
+    logger.debug('rooms', JSON.stringify(io.of('/').adapter.rooms))
     socket.join(xetId)
   }).on('leave', xetId => {
     logger.debug(socket.id, 'leaving', 'xetId', 'room')
