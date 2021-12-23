@@ -19,8 +19,7 @@ io.on('connection', (socket) => {
   }).on('disconnect', () => {
     logger.debug(socket.id, 'disconnected')
   }).on('join', xetId => {
-    logger.debug(xetId, 'joining')
-    logger.debug(`rooms ${JSON.stringify(io.of('/').adapter.rooms)}`)
+    logger.debug(`${xetId} joining`)
     socket.join(xetId)
   }).on('leave', xetId => {
     logger.debug(`${socket.id} leaving ${xetId} room`)
